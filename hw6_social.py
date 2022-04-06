@@ -25,7 +25,9 @@ Parameters: str
 Returns: dataframe
 '''
 def makeDataFrame(filename):
-    return
+    d = pd.read_csv(filename)
+    df = pd.DataFrame(d)
+    return df
 
 
 '''
@@ -35,7 +37,11 @@ Parameters: str
 Returns: str
 '''
 def parseName(fromString):
-    return
+    s1 = fromString.find(":") + 1
+    s2 = fromString.find("(")
+    s = fromString[s1:s2]
+    s = s.strip()
+    return s
 
 
 '''
@@ -45,7 +51,10 @@ Parameters: str
 Returns: str
 '''
 def parsePosition(fromString):
-    return
+    s1 = fromString.find("(") + 1
+    s2 = fromString.find(" from")
+    s = fromString[s1:s2]
+    return s
 
 
 '''
@@ -55,7 +64,11 @@ Parameters: str
 Returns: str
 '''
 def parseState(fromString):
-    return
+    s1 = fromString.find("from") + len("from")
+    s2 = fromString.find(")")
+    s = fromString[s1:s2]
+    s = s.strip()
+    return s
 
 
 '''
@@ -65,7 +78,19 @@ Parameters: str
 Returns: list of strs
 '''
 def findHashtags(message):
-    return
+    line = message.split("#")
+    s = []
+    v = ""
+    for i in range(1,len(line)):
+        for j in line[i]:
+            if j in endChars:
+                break
+            else:
+                v += j
+        v = "#" + v
+        s.append(v)
+        v = ""
+    return s 
 
 
 '''
@@ -75,6 +100,7 @@ Parameters: dataframe ; str
 Returns: str
 '''
 def getRegionFromState(stateDf, state):
+
     return
 
 
@@ -262,10 +288,10 @@ def scatterPlot(xValues, yValues, labels, title):
 
 # This code runs the test cases to check your work
 if __name__ == "__main__":
-    print("\n" + "#"*15 + " WEEK 1 TESTS " +  "#" * 16 + "\n")
+    """print("\n" + "#"*15 + " WEEK 1 TESTS " +  "#" * 16 + "\n")
     test.week1Tests()
     print("\n" + "#"*15 + " WEEK 1 OUTPUT " + "#" * 15 + "\n")
-    test.runWeek1()
+    test.runWeek1()"""
 
     ## Uncomment these for Week 2 ##
     """print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
@@ -276,3 +302,8 @@ if __name__ == "__main__":
     ## Uncomment these for Week 3 ##
     """print("\n" + "#"*15 + " WEEK 3 OUTPUT " + "#" * 15 + "\n")
     test.runWeek3()"""
+    test.testMakeDataFrame()
+    test.testParseName()
+    test.testParsePosition()
+    test.testParseState()
+    test.testFindHashtags()
