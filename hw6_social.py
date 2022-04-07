@@ -4,6 +4,7 @@ Name:
 Roll Number:
 """
 
+from fileinput import filename
 import hw6_social_tests as test
 
 project = "Social" # don't edit this
@@ -25,7 +26,9 @@ Parameters: str
 Returns: dataframe
 '''
 def makeDataFrame(filename):
-    return
+    d = pd.read_csv(filename)
+    df = pd.DataFrame(d)
+    return df
 
 
 '''
@@ -35,7 +38,11 @@ Parameters: str
 Returns: str
 '''
 def parseName(fromString):
-    return
+    s1 = fromString.find(":") + 1
+    s2 = fromString.find("(")
+    s = fromString[s1:s2]
+    s = s.strip()
+    return s
 
 
 '''
@@ -45,7 +52,10 @@ Parameters: str
 Returns: str
 '''
 def parsePosition(fromString):
-    return
+    s1 = fromString.find("(") + 1
+    s2 = fromString.find(" from")
+    s = fromString[s1:s2]
+    return s
 
 
 '''
@@ -55,7 +65,11 @@ Parameters: str
 Returns: str
 '''
 def parseState(fromString):
-    return
+    s1 = fromString.find("from") + len("from")
+    s2 = fromString.find(")")
+    s = fromString[s1:s2]
+    s = s.strip()
+    return s
 
 
 '''
@@ -65,7 +79,19 @@ Parameters: str
 Returns: list of strs
 '''
 def findHashtags(message):
-    return
+    line = message.split("#")
+    s = []
+    v = ""
+    for i in range(1,len(line)):
+        for j in line[i]:
+            if j in endChars:
+                break
+            else:
+                v += j
+        v = "#" + v
+        s.append(v)
+        v = ""
+    return s 
 
 
 '''
@@ -75,7 +101,8 @@ Parameters: dataframe ; str
 Returns: str
 '''
 def getRegionFromState(stateDf, state):
-    return
+    s = stateDf.loc[stateDf['state'] == state, 'region']
+    return s.values[0]
 
 
 '''
@@ -85,11 +112,28 @@ Parameters: dataframe ; dataframe
 Returns: None
 '''
 def addColumns(data, stateDf):
-    return
+    name = []
+    position = []
+    state = []
+    region = []
+    hashtags = []
+    for index,row in data.iterrows():
+        s = row["label"]
+        name.append(parseName(s))
+        position.append(parsePosition(s))
+        state.append(parseState(s))
+        region.append(getRegionFromState(stateDf, parseState(s)))
+        n = row["text"]
+        hashtags.append(findHashtags(n))
+    data["name"] = name
+    data["position"] = position
+    data["state"] = state
+    data["region"] = region
+    data["hashtags"] = hashtags
+    return 
 
 
 ### PART 2 ###
-
 '''
 findSentiment(classifier, message)
 #1 [Check6-2]
@@ -98,7 +142,12 @@ Returns: str
 '''
 def findSentiment(classifier, message):
     score = classifier.polarity_scores(message)['compound']
-    return
+    if score < -0.1:
+        return "negative"
+    elif score > 0.1:
+        return "positive"
+    else:
+        return "neutral"
 
 
 '''
@@ -109,6 +158,11 @@ Returns: None
 '''
 def addSentimentColumn(data):
     classifier = SentimentIntensityAnalyzer()
+    sentiment = []
+    for index,row in data.iterrows():
+        s = row["text"]
+        sentiment.append(findSentiment(classifier, s))
+    data["sentiment"] = sentiment
     return
 
 
@@ -119,8 +173,24 @@ Parameters: dataframe ; str ; str
 Returns: dict mapping strs to ints
 '''
 def getDataCountByState(data, colName, dataToCount):
-    return
-
+    s = {}
+    for index,row in data.iterrows():
+        #print(colName)
+        if len(colName) != 0 and len(dataToCount) != 0:
+            #print(row[colName])
+            #print(dataToCount)
+            if row[colName] == dataToCount:
+                if row["state"] in s:
+                    s[row["state"]] += 1
+                else:
+                    s[row["state"]] = 1
+        else:
+            if row["state"] in s:
+                s[row["state"]] += 1
+            else:
+                s[row["state"]] = 1
+    #print(s)
+    return s
 
 '''
 getDataForRegion(data, colName)
@@ -129,7 +199,16 @@ Parameters: dataframe ; str
 Returns: dict mapping strs to (dicts mapping strs to ints)
 '''
 def getDataForRegion(data, colName):
-    return
+    d = {}
+    for index,row in data.iterrows():
+        if row['region'] not in d:
+            d[row['region']] = {}
+        if row[colName] in d[row['region']]:
+            d[row['region']][row[colName]] += 1
+        else:
+            d[row['region']][row[colName]] = 1
+    #print(d)
+    return d
 
 
 '''
@@ -139,7 +218,17 @@ Parameters: dataframe
 Returns: dict mapping strs to ints
 '''
 def getHashtagRates(data):
-    return
+    tag_dict = {}
+    for index,row in data.iterrows():
+        tags = row["hashtags"]
+        for i in range(len(tags)):
+            if tags[i] not in tag_dict:
+                #print(tags[i])
+                tag_dict[tags[i]] = 1
+            else:
+                tag_dict[tags[i]] +=1
+    #print(tag_dict)
+    return tag_dict
 
 
 '''
@@ -262,17 +351,34 @@ def scatterPlot(xValues, yValues, labels, title):
 
 # This code runs the test cases to check your work
 if __name__ == "__main__":
-    print("\n" + "#"*15 + " WEEK 1 TESTS " +  "#" * 16 + "\n")
+    '''print("\n" + "#"*15 + " WEEK 1 TESTS " +  "#" * 16 + "\n")
     test.week1Tests()
     print("\n" + "#"*15 + " WEEK 1 OUTPUT " + "#" * 15 + "\n")
-    test.runWeek1()
+    test.runWeek1()'''
 
     ## Uncomment these for Week 2 ##
-    """print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
+    '''print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
     test.week2Tests()
     print("\n" + "#"*15 + " WEEK 2 OUTPUT " + "#" * 15 + "\n")
-    test.runWeek2()"""
+    test.runWeek2()'''
 
     ## Uncomment these for Week 3 ##
     """print("\n" + "#"*15 + " WEEK 3 OUTPUT " + "#" * 15 + "\n")
     test.runWeek3()"""
+    test.testMakeDataFrame()
+    test.testParseName()
+    test.testParsePosition()
+    test.testParseState()
+    test.testFindHashtags()
+    test.testGetRegionFromState()
+    test.testAddColumns()
+    test.testFindSentiment()
+    test.testAddSentimentColumn()
+    df = makeDataFrame("data/politicaldata.csv")
+    stateDf = makeDataFrame("data/statemappings.csv")
+    addColumns(df, stateDf)
+    addSentimentColumn(df)
+    #df.to_csv("C:\\Users\\HP\\OneDrive\\Desktop\\Book1.csv")
+    test.testGetDataCountByState(df)
+    test.testGetDataForRegion(df)
+    test.testGetHashtagRates(df)
