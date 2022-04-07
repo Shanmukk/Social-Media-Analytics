@@ -199,7 +199,16 @@ Parameters: dataframe ; str
 Returns: dict mapping strs to (dicts mapping strs to ints)
 '''
 def getDataForRegion(data, colName):
-    return
+    d = {}
+    for index,row in data.iterrows():
+        if row['region'] not in d:
+            d[row['region']] = {}
+        if row[colName] in d[row['region']]:
+            d[row['region']][row[colName]] += 1
+        else:
+            d[row['region']][row[colName]] = 1
+    print(d)
+    return d
 
 
 '''
@@ -360,3 +369,4 @@ if __name__ == "__main__":
     addColumns(df, stateDf)
     addSentimentColumn(df)
     test.testGetDataCountByState(df)
+    test.testGetDataForRegion(df)
