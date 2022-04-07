@@ -13,6 +13,8 @@ project = "Social" # don't edit this
 
 import pandas as pd
 import nltk
+from collections import Counter
+import operator
 nltk.download('vader_lexicon', quiet=True)
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import matplotlib.pyplot as plt; plt.rcdefaults()
@@ -227,7 +229,7 @@ def getHashtagRates(data):
                 tag_dict[tags[i]] = 1
             else:
                 tag_dict[tags[i]] +=1
-    #print(tag_dict)
+    #print(len(tag_dict))
     return tag_dict
 
 
@@ -238,8 +240,13 @@ Parameters: dict mapping strs to ints ; int
 Returns: dict mapping strs to ints
 '''
 def mostCommonHashtags(hashtags, count):
-    return
-
+    most_common = {}
+    s = Counter(hashtags)
+    n = count
+    sort = list(sorted(s.items(), key=operator.itemgetter(1),reverse=True))[:n]
+    for key,value in sort:
+        most_common[key] = value
+    return most_common
 
 '''
 getHashtagSentiment(data, hashtag)
@@ -382,3 +389,4 @@ if __name__ == "__main__":
     test.testGetDataCountByState(df)
     test.testGetDataForRegion(df)
     test.testGetHashtagRates(df)
+    test.testMostCommonHashtags(df)
