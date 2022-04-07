@@ -4,6 +4,7 @@ Name:
 Roll Number:
 """
 
+from fileinput import filename
 import hw6_social_tests as test
 
 project = "Social" # don't edit this
@@ -172,8 +173,24 @@ Parameters: dataframe ; str ; str
 Returns: dict mapping strs to ints
 '''
 def getDataCountByState(data, colName, dataToCount):
-    return
-
+    s = {}
+    for index,row in data.iterrows():
+        #print(colName)
+        if len(colName) != 0 and len(dataToCount) != 0:
+            #print(row[colName])
+            #print(dataToCount)
+            if row[colName] == dataToCount:
+                if row["state"] in s:
+                    s[row["state"]] += 1
+                else:
+                    s[row["state"]] = 1
+        else:
+            if row["state"] in s:
+                s[row["state"]] += 1
+            else:
+                s[row["state"]] = 1
+    #print(s)
+    return s
 
 '''
 getDataForRegion(data, colName)
@@ -315,16 +332,16 @@ def scatterPlot(xValues, yValues, labels, title):
 
 # This code runs the test cases to check your work
 if __name__ == "__main__":
-    """print("\n" + "#"*15 + " WEEK 1 TESTS " +  "#" * 16 + "\n")
+    '''print("\n" + "#"*15 + " WEEK 1 TESTS " +  "#" * 16 + "\n")
     test.week1Tests()
     print("\n" + "#"*15 + " WEEK 1 OUTPUT " + "#" * 15 + "\n")
-    test.runWeek1()"""
+    test.runWeek1()'''
 
     ## Uncomment these for Week 2 ##
-    """print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
+    '''print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
     test.week2Tests()
     print("\n" + "#"*15 + " WEEK 2 OUTPUT " + "#" * 15 + "\n")
-    test.runWeek2()"""
+    test.runWeek2()'''
 
     ## Uncomment these for Week 3 ##
     """print("\n" + "#"*15 + " WEEK 3 OUTPUT " + "#" * 15 + "\n")
@@ -338,3 +355,8 @@ if __name__ == "__main__":
     test.testAddColumns()
     test.testFindSentiment()
     test.testAddSentimentColumn()
+    df = makeDataFrame("data/politicaldata.csv")
+    stateDf = makeDataFrame("data/statemappings.csv")
+    addColumns(df, stateDf)
+    addSentimentColumn(df)
+    test.testGetDataCountByState(df)
