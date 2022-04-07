@@ -5,6 +5,7 @@ Roll Number:
 """
 
 from fileinput import filename
+from tkinter import CENTER
 import hw6_social_tests as test
 
 project = "Social" # don't edit this
@@ -280,6 +281,14 @@ Returns: None
 '''
 def graphStateCounts(stateCounts, title):
     import matplotlib.pyplot as plt
+    lst = list(stateCounts.items())
+    for key,value in lst:
+        labels = key
+        yValues = value
+        plt.bar(labels,yValues,color='red')
+        plt.xlabel(title,loc='center')
+        plt.xticks(rotation="vertical")
+    plt.show()
     return
 
 
@@ -382,9 +391,9 @@ if __name__ == "__main__":
     test.runWeek2()'''
 
     ## Uncomment these for Week 3 ##
-    """print("\n" + "#"*15 + " WEEK 3 OUTPUT " + "#" * 15 + "\n")
-    test.runWeek3()"""
-    test.testMakeDataFrame()
+    print("\n" + "#"*15 + " WEEK 3 OUTPUT " + "#" * 15 + "\n")
+    test.runWeek3()
+    '''test.testMakeDataFrame()
     test.testParseName()
     test.testParsePosition()
     test.testParseState()
@@ -402,4 +411,5 @@ if __name__ == "__main__":
     test.testGetDataForRegion(df)
     test.testGetHashtagRates(df)
     test.testMostCommonHashtags(df)
-    test.testGetHashtagSentiment(df)
+    test.testGetHashtagSentiment(df)'''
+    
