@@ -207,7 +207,7 @@ def getDataForRegion(data, colName):
             d[row['region']][row[colName]] += 1
         else:
             d[row['region']][row[colName]] = 1
-    print(d)
+    #print(d)
     return d
 
 
@@ -218,7 +218,17 @@ Parameters: dataframe
 Returns: dict mapping strs to ints
 '''
 def getHashtagRates(data):
-    return
+    tag_dict = {}
+    for index,row in data.iterrows():
+        tags = row["hashtags"]
+        for i in range(len(tags)):
+            if tags[i] not in tag_dict:
+                #print(tags[i])
+                tag_dict[tags[i]] = 1
+            else:
+                tag_dict[tags[i]] +=1
+    #print(tag_dict)
+    return tag_dict
 
 
 '''
@@ -368,5 +378,7 @@ if __name__ == "__main__":
     stateDf = makeDataFrame("data/statemappings.csv")
     addColumns(df, stateDf)
     addSentimentColumn(df)
+    #df.to_csv("C:\\Users\\HP\\OneDrive\\Desktop\\Book1.csv")
     test.testGetDataCountByState(df)
     test.testGetDataForRegion(df)
+    test.testGetHashtagRates(df)
