@@ -299,6 +299,15 @@ Parameters: dict mapping strs to ints ; dict mapping strs to ints ; int ; str
 Returns: None
 '''
 def graphTopNStates(stateCounts, stateFeatureCounts, n, title):
+    feature ={}
+    h = {}
+    for i in stateFeatureCounts:
+        feature[i] = stateFeatureCounts[i]/stateCounts[i]
+    s = Counter(feature)
+    sort = list(sorted(s.items(), key=operator.itemgetter(1),reverse=True))[:n]
+    for key,value in sort:
+        h[key] = value
+    graphStateCounts(h,'top n state')
     return
 
 
