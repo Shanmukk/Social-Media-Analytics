@@ -342,8 +342,8 @@ def graphHashtagSentimentByFrequency(data):
     frequency = []
     sentiment = []
     hashtag = getHashtagRates(data)
-    common = mostCommonHashtags(common,50)
-    for key,value in top.items():
+    common = mostCommonHashtags(hashtag,50)
+    for key,value in common.items():
         hashtags.append(key)
         frequency.append(value)
         sentiment.append(getHashtagSentiment(data,key))
