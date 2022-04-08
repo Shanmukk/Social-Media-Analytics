@@ -210,7 +210,6 @@ def getDataForRegion(data, colName):
             d[row['region']][row[colName]] += 1
         else:
             d[row['region']][row[colName]] = 1
-    #print(d)
     return d
 
 
@@ -318,8 +317,19 @@ Parameters: dict mapping strs to (dicts mapping strs to ints) ; str
 Returns: None
 '''
 def graphRegionComparison(regionDicts, title):
+    region_names = []
+    feature_names = []
+    region_feature = []
+    for key,values in regionDicts.items():
+        feature_names.append(key)
+        temp = []
+        for region,feature in values.items():
+            if region not in region_names:
+                region_names.append(region)
+            temp.append(feature)
+        region_feature.append(temp)
+    sideBySideBarPlots(region_names,feature_names,region_feature,title)
     return
-
 
 '''
 graphHashtagSentimentByFrequency(data)
@@ -328,6 +338,16 @@ Parameters: dataframe
 Returns: None
 '''
 def graphHashtagSentimentByFrequency(data):
+    '''hashtags = []
+    frequency = []
+    sentiment = []
+    hash_tag = getHashtagRates(data)
+    top = mostCommonHashtags(hash_tag,50)
+    for key,value in top.items():
+        hashtags.append(key)
+        frequency.append(value)
+        sentiment.append(getHashtagSentiment(data,key))
+    scatterPlot(frequency,sentiment,hashtags,"sentiment graph")'''
     return
 
 

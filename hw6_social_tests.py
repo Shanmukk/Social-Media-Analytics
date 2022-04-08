@@ -277,4 +277,4 @@ def runWeek3():
     graphRegionComparison(positionTypes, "Position by Region")
 
     print("Scatterplot:")
-    graphHashtagSentimentByFrequency()
+    graphHashtagSentimentByFrequency(df)
