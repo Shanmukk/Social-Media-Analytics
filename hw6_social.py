@@ -344,7 +344,7 @@ def graphHashtagSentimentByFrequency(data):
     hashtag = getHashtagRates(data)
     top = mostCommonHashtags(hashtag,50)
     for key,value in top.items():
-        hashtags.append(key)
+        hash_tags.append(key)
         frequency.append(value)
         sentiment.append(getHashtagSentiment(data,key))
     scatterPlot(frequency,sentiment,hash_tags,"sentiment graph")
